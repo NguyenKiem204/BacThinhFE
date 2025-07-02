@@ -1,80 +1,100 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
-  fetchUsers,
-  searchUsers,
-  createUser,
-  updateUser,
-  deleteUser,
-} from "../../services/adminUserAPI";
-import UserTable from "../../components/admin/users/UserTable";
-import UserSearchBar from "../../components/admin/users/UserSearchBar";
-import UserModal from "../../components/admin/users/UserModal";
+  getAllNews,
+  createNews,
+  updateNews,
+  deleteNews,
+  changeNewsStatus,
+} from "../../services/adminNewsAPI";
+import NewsTable from "../../components/admin/news/NewsTable";
+import NewsModal from "../../components/admin/news/NewsModal";
+import NewsSearchBar from "../../components/admin/news/NewsSearchBar";
+import NewsFilter from "../../components/admin/news/NewsFilter";
+import { useNavigate } from "react-router-dom";
 
 const sortFields = [
   { value: "id", label: "ID" },
-  { value: "email", label: "Email" },
-  { value: "role", label: "Role" },
-  { value: "status", label: "Status" },
-  { value: "residentId", label: "Resident ID" },
+  { value: "title", label: "Tiêu đề" },
+  { value: "status", label: "Trạng thái" },
+  { value: "categoryId", label: "Danh mục" },
+  { value: "authorId", label: "Tác giả" },
   { value: "createdAt", label: "Ngày tạo" },
 ];
 
 const pageSizes = [5, 10, 20, 50, 100];
 
-const UsersManagementPage = () => {
-  const [users, setUsers] = useState([]);
+const initialForm = {
+  title: "",
+  slug: "",
+  summary: "",
+  content: "",
+  imageUrl: "",
+  status: "DRAFT",
+  categoryId: "",
+};
+
+export default function NewsManagementPage() {
+  const [newsList, setNewsList] = useState([]);
   const [pagination, setPagination] = useState({ page: 0, size: 10, total: 0 });
-  const [sort, setSort] = useState({ sortBy: "id", sortDir: "asc" });
+  const [sort, setSort] = useState({ sortBy: "id", sortDir: "desc" });
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedNews, setSelectedNews] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [showDeleteId, setShowDeleteId] = useState(null);
+  const [formData, setFormData] = useState(initialForm);
+  const navigate = useNavigate();
 
   const totalPages = Math.ceil(pagination.total / pagination.size);
 
-  const loadUsers = useCallback(async () => {
+  // Debounce search
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      loadNews();
+    }, 400);
+    return () => clearTimeout(handler);
+    // eslint-disable-next-line
+  }, [search, pagination.page, pagination.size, sort]);
+
+  const loadNews = useCallback(async () => {
     setLoading(true);
     try {
       let res;
-      if (search) {
-        res = await searchUsers({
-          keyword: search,
-          page: pagination.page,
-          size: pagination.size,
-        });
-      } else {
-        res = await fetchUsers({
-          page: pagination.page,
-          size: pagination.size,
-          ...sort,
-        });
-      }
-      setUsers(res.data.data.content);
+      res = await getAllNews({
+        page: pagination.page,
+        size: pagination.size,
+        sortBy: sort.sortBy,
+        sortDir: sort.sortDir,
+      });
+      setNewsList(res.data.data.content || res.data.data || []);
       setPagination((prev) => ({
         ...prev,
         total: res.data.data.totalElements,
       }));
-    } catch (error) {
-      console.error("Failed to load users:", error);
+    } catch {
+      setNewsList([]);
     }
     setLoading(false);
-  }, [pagination.page, pagination.size, sort, search]);
+  }, [pagination.page, pagination.size, sort]);
 
   useEffect(() => {
-    loadUsers();
-  }, [loadUsers]);
+    loadNews();
+    // eslint-disable-next-line
+  }, []);
 
   const handleSave = async (data) => {
-    if (selectedUser) await updateUser(selectedUser.id, data);
-    else await createUser(data);
+    if (selectedNews) await updateNews(selectedNews.id, data);
+    else await createNews(data);
     setModalOpen(false);
-    loadUsers();
+    setSelectedNews(null);
+    setFormData(initialForm);
+    loadNews();
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Bạn có chắc muốn xóa user này?")) {
-      await deleteUser(id);
-      loadUsers();
+    if (window.confirm("Bạn có chắc muốn xóa tin này?")) {
+      await deleteNews(id);
+      loadNews();
     }
   };
 
@@ -105,14 +125,14 @@ const UsersManagementPage = () => {
   return (
     <div className="max-w-6xl w-full mx-auto px-2 py-4 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 mt-6">
       <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white text-center">
-        Quản lý người dùng
+        Quản lý tin tức
       </h1>
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
         <div className="flex-1 min-w-[200px] flex flex-col">
           <label className="text-sm font-medium mb-1 dark:text-gray-300">
             Tìm kiếm:
           </label>
-          <UserSearchBar
+          <NewsSearchBar
             value={search}
             onChange={setSearch}
             inputClassName="dark:bg-gray-900 dark:text-white dark:border-gray-700 dark:placeholder-gray-400"
@@ -169,40 +189,35 @@ const UsersManagementPage = () => {
       <div className="flex justify-end mb-2">
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition"
-          onClick={() => {
-            setSelectedUser(null);
-            setModalOpen(true);
-          }}
+          onClick={() => navigate("/admin/news/create")}
         >
-          + Tạo user mới
+          + Tạo tin mới
         </button>
       </div>
       <div className="overflow-x-auto rounded-2xl shadow-lg">
-        <UserTable
-          users={users}
+        <NewsTable
+          newsList={newsList}
           loading={loading}
-          onEdit={(user) => {
-            setSelectedUser(user);
+          onEdit={(news) => {
+            setSelectedNews(news);
+            setFormData(news);
             setModalOpen(true);
           }}
           onDelete={handleDelete}
-          zebra
+          onChangeStatus={async (id, status) => {
+            await changeNewsStatus(id, status);
+            loadNews();
+          }}
+          showDeleteId={showDeleteId}
+          setShowDeleteId={setShowDeleteId}
         />
       </div>
       {/* Pagination */}
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-2 mt-4">
         <div className="text-sm text-gray-600 dark:text-gray-300">
-          Tổng số: <span className="font-semibold">{pagination.total}</span>{" "}
-          user
+          Tổng số: <span className="font-semibold">{pagination.total}</span> tin
         </div>
         <div className="flex items-center gap-2">
-          <button
-            className="px-3 py-1 border rounded-lg disabled:opacity-50 bg-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-            onClick={() => handlePageChange(0)}
-            disabled={pagination.page === 0}
-          >
-            Đầu
-          </button>
           <button
             className="px-3 py-1 border rounded-lg disabled:opacity-50 bg-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
             onClick={() => handlePageChange(pagination.page - 1)}
@@ -210,7 +225,7 @@ const UsersManagementPage = () => {
           >
             Trước
           </button>
-          <span className="mx-2 dark:text-gray-200">
+          <span className="text-gray-900 dark:text-white">
             Trang <span className="font-semibold">{pagination.page + 1}</span> /{" "}
             {totalPages || 1}
           </span>
@@ -221,23 +236,41 @@ const UsersManagementPage = () => {
           >
             Sau
           </button>
-          <button
-            className="px-3 py-1 border rounded-lg disabled:opacity-50 bg-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-            onClick={() => handlePageChange(totalPages - 1)}
-            disabled={pagination.page + 1 >= totalPages}
-          >
-            Cuối
-          </button>
         </div>
       </div>
-      <UserModal
-        open={modalOpen}
-        user={selectedUser}
-        onClose={() => setModalOpen(false)}
-        onSave={handleSave}
-      />
+      {/* Modal */}
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setModalOpen(false);
+          }}
+        >
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-0 w-full max-w-3xl relative mx-2 animate-fadeIn max-h-[90vh] overflow-y-auto flex flex-col">
+            <button
+              className="sticky top-0 right-0 mt-4 mr-4 self-end text-gray-500 hover:text-gray-900 dark:hover:text-white text-3xl font-bold z-10 focus:outline-none bg-transparent"
+              onClick={() => setModalOpen(false)}
+              aria-label="Đóng"
+              type="button"
+            >
+              ×
+            </button>
+            <div className="p-8 sm:p-10 pt-2 sm:pt-4">
+              <NewsModal
+                form={formData}
+                setForm={setFormData}
+                isEdit={!!selectedNews}
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  await handleSave(formData);
+                }}
+                onCancel={() => setModalOpen(false)}
+                loading={loading}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-};
-
-export default UsersManagementPage;
+}

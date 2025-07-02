@@ -1,5 +1,5 @@
 import { Menu, Search, Moon, Sun } from "lucide-react";
-import UserDropdown from "../common/UserDropdown";
+import UserDropdown from "../../common/UserDropdown";
 import useAuthStore from "@store/useAuthStore";
 import { useTheme } from "@hooks/useTheme";
 

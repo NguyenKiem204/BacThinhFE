@@ -11,7 +11,7 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import useAuthStore from "@store/useAuthStore";
-import logo from "../../assets/logo.png";
+import logo from "../../../assets/logo.png";
 
 const adminMenu = [
   { group: "HOME" },
@@ -19,6 +19,7 @@ const adminMenu = [
   { group: "APPS" },
   { to: "/admin/users", label: "Users", icon: Users },
   { to: "/admin/residents", label: "Residents", icon: Home },
+  { to: "/admin/news", label: "News", icon: BookOpen },
   { to: "/admin/masses", label: "Masses Schedule", icon: Calendar },
   { to: "/admin/prayer-books", label: "Prayer Books", icon: BookOpen },
   { to: "/admin/events", label: "Events", icon: CalendarPlus },
@@ -35,17 +36,19 @@ export default function AdminSidebar({ isOpen, setOpen }) {
       } flex flex-col h-screen`}
     >
       <div className="flex items-center justify-center p-4 border-b h-[73px] dark:border-gray-700">
-        <img
-          src={logo}
-          alt="Logo"
-          className={`overflow-hidden transition-all ${
-            isOpen ? "w-10 h-10" : "w-0"
-          }`}
-        />
-        {isOpen && (
-          <span className="text-xl font-bold ml-2 text-gray-900 dark:text-white">
-            BacThinh
-          </span>
+        {isOpen ? (
+          <>
+            <img src={logo} alt="Logo" className="w-10 h-10" />
+            <span className="text-xl font-bold ml-2 text-gray-900 dark:text-white">
+              BacThinh
+            </span>
+          </>
+        ) : (
+          <img
+            src={logo}
+            alt="Logo"
+            className="w-10 h-10 rounded-full shadow"
+          />
         )}
       </div>
 

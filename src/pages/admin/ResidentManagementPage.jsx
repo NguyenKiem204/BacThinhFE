@@ -6,9 +6,9 @@ import {
   updateResident,
   deleteResident,
 } from "../../services/adminResidentAPI";
-import UserTable from "../../components/admin/ResidentTable";
-import UserSearchBar from "../../components/admin/UserSearchBar";
-import UserModal from "../../components/admin/UserModal";
+import UserTable from "../../components/admin/residents/ResidentTable";
+import UserSearchBar from "../../components/admin/users/UserSearchBar";
+import UserModal from "../../components/admin/users/UserModal";
 
 const sortFields = [
   { value: "id", label: "ID" },

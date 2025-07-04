@@ -5,6 +5,7 @@ import ResidentManagementPage from "../pages/admin/ResidentManagementPage";
 import DashboardPage from "../pages/admin/DashboardPage";
 import NewsManagementPage from "../pages/admin/NewsManagementPage";
 import NewsCreatePage from "../pages/admin/NewsCreatePage";
+import WeeklyScheduleManagementPage from "../pages/admin/WeeklyScheduleManagementPage";
 import AdminProtectedRoute from "./AdminProtectedRoute";
 
 export const adminRoutes = {
@@ -17,6 +18,10 @@ export const adminRoutes = {
         { path: "residents", element: <ResidentManagementPage /> },
         { path: "news", element: <NewsManagementPage /> },
         { path: "/admin/news/create", element: <NewsCreatePage /> },
+        {
+          path: "/admin/weekly-schedules",
+          element: <WeeklyScheduleManagementPage />,
+        },
       ],
     },
   ],

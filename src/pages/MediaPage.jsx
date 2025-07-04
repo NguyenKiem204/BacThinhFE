@@ -9,25 +9,21 @@ export default function MediaPage() {
   const [page, setPage] = useState(1);
   const pageSize = 6;
 
-  // Lấy danh sách type duy nhất
   const types = useMemo(() => {
     const set = new Set(media.map((n) => n.type));
     return Array.from(set);
   }, [media]);
 
-  // Reset page về 1 khi đổi filter
   const handleFilterChange = (type) => {
     setFilterType(type);
     setPage(1);
   };
 
-  // Tính tổng số media sau filter
   const filteredMedia = filterType
     ? media.filter((item) => item.type === filterType)
     : media;
   const total = filteredMedia.length;
 
-  // Phân trang
   const pagedMedia = filteredMedia.slice(
     (page - 1) * pageSize,
     page * pageSize
@@ -49,7 +45,6 @@ export default function MediaPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-center text-indigo-700 dark:text-indigo-200 mb-8">
           Thư viện Giáo Xứ Bắc Thịnh
         </h1>
-        {/* Filter type dropdown */}
         {types.length > 1 && (
           <div className="mb-8 flex justify-end">
             <select
@@ -67,7 +62,6 @@ export default function MediaPage() {
           </div>
         )}
         <MediaSection media={pagedMedia} hideSeeAllButton />
-        {/* Pagination */}
         {total > pageSize && (
           <div className="flex justify-center mt-10 gap-2">
             {Array.from({ length: Math.ceil(total / pageSize) }).map((_, i) => (

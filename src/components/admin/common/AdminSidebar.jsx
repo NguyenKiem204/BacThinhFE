@@ -23,6 +23,7 @@ const adminMenu = [
   { to: "/admin/masses", label: "Masses Schedule", icon: Calendar },
   { to: "/admin/prayer-books", label: "Prayer Books", icon: BookOpen },
   { to: "/admin/events", label: "Events", icon: CalendarPlus },
+  { to: "/admin/weekly-schedules", label: "Weekly Schedules", icon: Calendar },
 ];
 
 export default function AdminSidebar({ isOpen, setOpen }) {

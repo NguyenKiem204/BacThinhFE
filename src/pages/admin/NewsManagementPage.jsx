@@ -5,6 +5,7 @@ import {
   updateNews,
   deleteNews,
   changeNewsStatus,
+  searchNews,
 } from "../../services/adminNewsAPI";
 import NewsTable from "../../components/admin/news/NewsTable";
 import NewsModal from "../../components/admin/news/NewsModal";
@@ -47,25 +48,26 @@ export default function NewsManagementPage() {
 
   const totalPages = Math.ceil(pagination.total / pagination.size);
 
-  // Debounce search
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      loadNews();
-    }, 400);
-    return () => clearTimeout(handler);
-    // eslint-disable-next-line
-  }, [search, pagination.page, pagination.size, sort]);
-
   const loadNews = useCallback(async () => {
     setLoading(true);
     try {
       let res;
-      res = await getAllNews({
-        page: pagination.page,
-        size: pagination.size,
-        sortBy: sort.sortBy,
-        sortDir: sort.sortDir,
-      });
+      if (search && search.trim() !== "") {
+        res = await searchNews({
+          keyword: search,
+          page: pagination.page,
+          size: pagination.size,
+          sortBy: sort.sortBy,
+          sortDir: sort.sortDir,
+        });
+      } else {
+        res = await getAllNews({
+          page: pagination.page,
+          size: pagination.size,
+          sortBy: sort.sortBy,
+          sortDir: sort.sortDir,
+        });
+      }
       setNewsList(res.data.data.content || res.data.data || []);
       setPagination((prev) => ({
         ...prev,
@@ -75,12 +77,18 @@ export default function NewsManagementPage() {
       setNewsList([]);
     }
     setLoading(false);
-  }, [pagination.page, pagination.size, sort]);
+  }, [pagination.page, pagination.size, sort, search]);
 
   useEffect(() => {
+    const handler = setTimeout(() => {
+      loadNews();
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [search, pagination.page, pagination.size, sort, loadNews]);
+  
+  useEffect(() => {
     loadNews();
-    // eslint-disable-next-line
-  }, []);
+  }, [loadNews]);
 
   const handleSave = async (data) => {
     if (selectedNews) await updateNews(selectedNews.id, data);

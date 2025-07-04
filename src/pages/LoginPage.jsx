@@ -5,7 +5,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       <div className="w-full max-w-md">
-        {/* Logo và Header */}
         <div className="text-center mb-8">
           <div className="mx-auto w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
             <svg
@@ -26,11 +25,9 @@ export default function LoginPage() {
           <p className="text-gray-600">Đăng nhập để tiếp tục sử dụng dịch vụ</p>
         </div>
 
-        {/* Form Container */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
           <LoginForm />
 
-          {/* Divider */}
           <div className="my-8 flex items-center">
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
             <span className="mx-4 text-gray-400 text-sm font-medium">hoặc</span>

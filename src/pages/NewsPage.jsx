@@ -9,19 +9,16 @@ export default function NewsPage() {
   const [page, setPage] = useState(1);
   const pageSize = 6;
 
-  // Lấy danh sách category duy nhất
   const categories = useMemo(() => {
     const set = new Set(news.map((n) => n.category));
     return Array.from(set);
   }, [news]);
 
-  // Reset page về 1 khi đổi filter
   const handleFilterChange = (cat) => {
     setFilterCategory(cat);
     setPage(1);
   };
 
-  // Tính tổng số tin sau filter
   const filteredNews = filterCategory
     ? news.filter((item) => item.category === filterCategory)
     : news;

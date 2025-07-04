@@ -36,11 +36,13 @@ const UsersManagementPage = () => {
     setLoading(true);
     try {
       let res;
-      if (search) {
+      if (search && search.trim() !== "") {
         res = await searchUsers({
           keyword: search,
           page: pagination.page,
           size: pagination.size,
+          sortBy: sort.sortBy,
+          sortDir: sort.sortDir,
         });
       } else {
         res = await fetchUsers({

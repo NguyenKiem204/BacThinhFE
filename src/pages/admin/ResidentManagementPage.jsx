@@ -35,11 +35,13 @@ const ResidentManagementPage = () => {
     setLoading(true);
     try {
       let res;
-      if (search) {
+      if (search && search.trim() !== "") {
         res = await searchResidents({
           keyword: search,
           page: pagination.page,
           size: pagination.size,
+          sortBy: sort.sortBy,
+          sortDir: sort.sortDir,
         });
       } else {
         res = await fetchResidents({

@@ -21,7 +21,6 @@ export default function ContactPage() {
           Liên hệ với Giáo Xứ Bắc Thịnh
         </h1>
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Thông tin liên hệ */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 flex flex-col justify-between">
             <div>
               <h2 className="text-xl font-bold mb-4 text-blue-700 dark:text-blue-300">
@@ -56,7 +55,6 @@ export default function ContactPage() {
               ></iframe>
             </div>
           </div>
-          {/* Form liên hệ */}
           <form
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 flex flex-col gap-4"
             onSubmit={handleSubmit}

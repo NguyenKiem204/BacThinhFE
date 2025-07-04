@@ -1,4 +1,11 @@
 import React from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./datepicker-dark.css";
+import { registerLocale } from "react-datepicker";
+import vi from "date-fns/locale/vi";
+registerLocale("vi", vi);
+import { format } from "date-fns";
 
 const WeeklyScheduleFilter = ({ filter, setFilter, loading, onSearch }) => {
   // TODO: Thay thế input date bằng date picker thực tế nếu có thư viện
@@ -9,26 +16,40 @@ const WeeklyScheduleFilter = ({ filter, setFilter, loading, onSearch }) => {
           <label className="text-sm font-medium mb-1 dark:text-gray-300">
             Từ ngày
           </label>
-          <input
-            type="date"
-            className="border px-2 py-2 rounded-lg dark:bg-gray-900 dark:text-white dark:border-gray-700"
-            value={filter.startDate || ""}
-            onChange={(e) =>
-              setFilter((f) => ({ ...f, startDate: e.target.value }))
+          <DatePicker
+            selected={filter.startDate ? new Date(filter.startDate) : null}
+            onChange={(date) =>
+              setFilter((f) => ({
+                ...f,
+                startDate: date ? format(date, "yyyy-MM-dd") : "",
+              }))
             }
+            dateFormat="dd/MM/yyyy"
+            locale="vi"
+            placeholderText="dd/MM/yyyy"
+            className="border px-2 py-2 rounded-lg dark:bg-gray-900 dark:text-white dark:border-gray-700 w-[150px]"
+            calendarClassName="dark:bg-gray-900 dark:text-white"
+            isClearable
           />
         </div>
         <div className="flex flex-col">
           <label className="text-sm font-medium mb-1 dark:text-gray-300">
             Đến ngày
           </label>
-          <input
-            type="date"
-            className="border px-2 py-2 rounded-lg dark:bg-gray-900 dark:text-white dark:border-gray-700"
-            value={filter.endDate || ""}
-            onChange={(e) =>
-              setFilter((f) => ({ ...f, endDate: e.target.value }))
+          <DatePicker
+            selected={filter.endDate ? new Date(filter.endDate) : null}
+            onChange={(date) =>
+              setFilter((f) => ({
+                ...f,
+                endDate: date ? format(date, "yyyy-MM-dd") : "",
+              }))
             }
+            dateFormat="dd/MM/yyyy"
+            locale="vi"
+            placeholderText="dd/MM/yyyy"
+            className="border px-2 py-2 rounded-lg dark:bg-gray-900 dark:text-white dark:border-gray-700 w-[150px]"
+            calendarClassName="dark:bg-gray-900 dark:text-white"
+            isClearable
           />
         </div>
         <div className="flex flex-col">

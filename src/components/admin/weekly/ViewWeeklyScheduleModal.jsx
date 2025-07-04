@@ -37,9 +37,15 @@ const ViewWeeklyScheduleModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-4xl p-6 relative max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-bold mb-2 text-center">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-4xl p-6 relative max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="text-xl font-bold mb-2 text-center dark:text-white">
           Chi tiết lịch thánh lễ tuần
         </h2>
         <div className="mb-2 text-center text-gray-700 dark:text-gray-200">

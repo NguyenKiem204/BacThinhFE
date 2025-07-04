@@ -33,13 +33,17 @@ const WeeklyScheduleManagementPage = () => {
         sortBy: sort.sortBy,
         sortDir: sort.sortDir,
       };
+      Object.keys(params).forEach(
+        (k) => (params[k] == null || params[k] === "") && delete params[k]
+      );
+      console.log("[WeeklySchedule] Gọi searchWeeklySchedules", params);
       const res = await searchWeeklySchedules(params);
-      setSchedules(res.data.data.content || []);
+      setSchedules(res.data.content || []);
       setPagination((prev) => ({
         ...prev,
-        total: res.data.data.totalElements,
+        total: res.data.totalElements,
       }));
-    } catch (e) {
+    } catch {
       setSchedules([]);
     }
     setLoading(false);

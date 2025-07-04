@@ -35,9 +35,15 @@ const QuickAddMassModal = ({ open, onClose, onSave, day }) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-md p-6 relative">
-        <h2 className="text-lg font-bold mb-4 text-center">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-md p-6 relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="text-lg font-bold mb-4 text-center dark:text-white">
           Thêm thánh lễ cho {day?.dayOfWeek}, {day?.date}
         </h2>
         <form onSubmit={handleSubmit}>

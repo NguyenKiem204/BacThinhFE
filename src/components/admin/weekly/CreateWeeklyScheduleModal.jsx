@@ -244,8 +244,14 @@ const CreateWeeklyScheduleModal = ({ open, onClose, onSuccess }) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-3xl p-0 relative max-h-[90vh] flex flex-col">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-3xl p-0 relative max-h-[90vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
           <div className="p-6 overflow-y-auto flex-1">
             <h2 className="text-xl font-bold mb-4 text-center dark:text-white">
@@ -343,7 +349,7 @@ const CreateWeeklyScheduleModal = ({ open, onClose, onSuccess }) => {
                       </span>
                       <button
                         type="button"
-                        className="text-blue-600 text-xs underline dark:text-blue-400"
+                        className="text-blue-600 text-xs underline dark:text-blue-400 dark:hover:text-blue-300"
                       >
                         {expanded[dayIdx] ? "Ẩn" : "Hiện"}
                       </button>
@@ -466,7 +472,7 @@ const CreateWeeklyScheduleModal = ({ open, onClose, onSuccess }) => {
                                   </label>
                                   <button
                                     type="button"
-                                    className="text-red-600 text-xs underline ml-2 dark:text-red-400"
+                                    className="text-red-600 text-xs underline ml-2 dark:text-red-400 dark:hover:text-red-300"
                                     onClick={() =>
                                       handleRemoveMass(dayIdx, massIdx)
                                     }
@@ -496,7 +502,7 @@ const CreateWeeklyScheduleModal = ({ open, onClose, onSuccess }) => {
                           })}
                           <button
                             type="button"
-                            className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded text-xs dark:text-blue-400"
+                            className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded text-xs dark:bg-blue-900 dark:hover:bg-blue-800 dark:text-blue-300"
                             onClick={() => handleAddMass(dayIdx)}
                           >
                             + Thêm thánh lễ
@@ -517,7 +523,7 @@ const CreateWeeklyScheduleModal = ({ open, onClose, onSuccess }) => {
           <div className="flex justify-end gap-2 p-6 pt-0 bg-white dark:bg-gray-800 sticky bottom-0 z-10 border-t dark:border-gray-700">
             <button
               type="button"
-              className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-gray-800"
+              className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
               onClick={onClose}
               disabled={loading}
             >
@@ -525,7 +531,7 @@ const CreateWeeklyScheduleModal = ({ open, onClose, onSuccess }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold dark:bg-blue-700 dark:hover:bg-blue-800 dark:text-white"
               disabled={loading}
             >
               {loading ? "Đang lưu..." : "Lưu"}
